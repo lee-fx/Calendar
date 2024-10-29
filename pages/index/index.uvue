@@ -3,6 +3,11 @@
 		<view class="top">
 			{{ year }} 年 {{ month + 1}} 月
 		</view>
+		<view class="button">
+			<view @click="topMonth()">上个月</view>
+			<view @click="bottomMonth()">下个月</view>
+			<view @click="clickNowDay()">今日</view>
+		</view>
 		<view class="centen">
 			<!-- 日程表 -->
 			<view class="calendar">
@@ -12,14 +17,16 @@
 					</view>
 				</view>
 				<view class="day">
-					<view class="days" style="color: gray;" v-for="(i,x) in beforeNumberAddNum" :key="x">
+					<!-- @click="clickNow(year, month, i)" -->
+					<view class="days" style="color: gray;" v-for="(i,x) in beforeNumberAddNum" :key="x" >
 						{{i}}
 					</view>
-					<view class="days" v-for="(item,index) in monthDays" :key="index">
+					<view class="days" v-for="(item,index) in monthDays" :key="index" @click="clickNow(year, month + 1, item)">
 						{{item}}
 					</view>
-					<view class="days">
-
+					<!-- @click="clickNow(year, month + 1, ite)" -->
+					<view class="days" style="color: gray;" v-for="(ite,idx) in afterMonthDays" :key="idx" >
+						{{ite}}
 					</view>
 				</view>
 			</view>
@@ -50,6 +57,8 @@
 	const beforeMonth = ref()
 	// 上个月需要补到这个月天数
 	const beforeNumberAddNum = ref()
+	// 下个月 补充的天数
+	const afterMonthDays = ref()
 
 	const weeks = ref([
 		{
@@ -104,10 +113,9 @@
 		// 当月界面整体天数
 		const monthDay = []
 		for (let i = 1; i <= totleWeekDays.value; i++) {
-			monthDay.push(i)
+			monthDay.push(Number(i))
 		}
-		monthDays.value = monthDay
-		console.log("当月总天数数组：", monthDay)
+
 		const beforeMonthDayNum = new Date(year.value, month.value, 0).getDate()
 		console.log("上个月补充数据：", beforeMonthDayNum)
 		const beforeMonthDays = []
@@ -122,8 +130,60 @@
 		beforeNumberAddNum.value = lastFour
 		console.log("上个月补充数据：", lastFour)
 
-		// 获取下个月数据 最多35天
 
+		monthDays.value = monthDay
+		console.log("当月总天数数组：", monthDay)
+		
+		// 获取下个月数据 最多35天
+		const sliceArr = monthDay.slice(0, 35 - anum)
+		const sliceLen = sliceArr.length
+		let afterArr = []
+		if(sliceLen < 35) {
+			let num = 35 - sliceLen - anum
+			console.log("下个月需要补齐长度：", num)
+			for (let i = 1; i <= num; i++) {
+				afterArr.push(i)
+			}
+		}
+		afterMonthDays.value = afterArr
+	}
+	
+	function topMonth() {
+		if(month.value <= 0) {
+			month.value = 11
+			year.value = year.value - 1
+		} else {
+			month.value = month.value - 1
+		}
+		getData()
+	}
+	
+	function bottomMonth() {
+		if(month.value >= 11) {
+			month.value = 0
+			year.value = year.value + 1
+		} else {
+			month.value = month.value + 1
+		}
+		getData()
+	}
+	
+	// 点击当月 后续拓展功能
+	function clickNow(iyear, imonth, iday) {
+		let item = 0
+		const Y = JSON.stringify(iyear)
+		const M = JSON.stringify(imonth)
+		const D = JSON.stringify(iday)
+		const now = Y + M + D
+		console.log(111, now)
+	}
+	
+	function clickNowDay() {
+		const nowDate = new Date()
+		year.value = nowDate.getFullYear()
+		month.value = nowDate.getMonth()
+		day.value = nowDate.getDay()
+		getData()
 	}
 
 	onMounted(() => {
@@ -155,7 +215,10 @@
 				justify-content: space-between;
 				width: 100%;
 				background-color: #91d1a2;
-				padding: 28rpx;
+				padding-left: 50rpx;
+				padding-right: 60rpx;
+				padding-top: 30rpx;
+				padding-bottom: 30rpx;
 				border-bottom: 1rpx solid #dadada;
 			}
 
@@ -164,17 +227,16 @@
 				flex-direction: row;
 				flex-wrap: wrap;
 				align-items: flex-start;
-				margin-left: -30rpx;
 				border-bottom: 1rpx solid #dadada;
 				padding-bottom: 50rpx;
 
 				.days {
-					width: 85rpx;
+					width: 100rpx;
 					white-space: normal;
 					align-items: center;
 					justify-content: center;
 					display: inline-grid;
-					padding-left: 47rpx;
+					padding-left: 30rpx;
 					padding-top: 50rpx;
 
 				}
