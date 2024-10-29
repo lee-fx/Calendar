@@ -1,0 +1,166 @@
+<template>
+	<view class="app">
+		<view class="top">
+			{{ year }} 年 {{ month + 1}} 月
+		</view>
+		<view class="centen">
+			<!-- 日程表 -->
+			<view class="calendar">
+				<view class="week">
+					<view class="weeks" v-for="(item, index) in weeks" :key="index">
+						{{ item.week }}
+					</view>
+				</view>
+				<view class="day">
+					<view class="days">
+						
+					</view>
+						<view class="days" v-for="(item,index) in monthDays" :key="index">
+							{{item}}
+						</view>
+					<view class="days">
+						
+					</view>
+				</view>
+			</view>
+		</view>
+		<view class="bottom">
+		</view>
+	</view>
+</template>
+
+<script setup>
+	// 当前时间
+	const currentDate = new Date()
+	// 年
+	const year = ref(currentDate.getFullYear())
+	// 月
+	const month = ref(currentDate.getMonth())
+	// 日
+	const day = ref(currentDate.getDate())
+	// 一共多少天
+	const totleWeekDays = ref()
+	// 当前月一号星期几
+	const startMonthWeek = ref()
+	// 当月界面完整天数
+	const monthDays = ref([])
+	// 当月前空数据
+	const monthBeforeNull = ref()
+	
+	const weeks = ref([
+		{
+			id: 0,
+			week: "日",
+		},
+		{
+			id: 1,
+			week: "一",
+		},
+		{
+			id: 2,
+			week: "二",
+		},
+		{
+			id: 3,
+			week: "三",
+		},
+		{
+			id: 4,
+			week: "四",
+		},
+		{
+			id: 5,
+			week: "五",
+		}, {
+			id: 6,
+			week: "六",
+		},
+	])
+	
+	function getData() {
+		// 一共多少天
+		totleWeekDays.value = new Date(year.value, month.value + 1, 0).getDate()
+		console.log("这个月一共：" + totleWeekDays.value)
+		
+		// 当月首天星期几
+		startMonthWeek.value = new Date(year.value, month.value, 1).getDay()
+		if(startMonthWeek.value === 0) {
+			startMonthWeek.value += 1
+		}
+		console.log("这个月一号星期几：" + startMonthWeek.value)
+		
+		// 当月前空数据 通过查找周期数据返回前面有空数据
+		const id = startMonthWeek.value
+		const index = weeks.value.findIndex(item => item.id === id)
+		const count = index>0? index : 0;
+		monthBeforeNull.value = count
+		console.log("当月前空数据：" , count)
+		
+		// 当月界面整体天数
+		const monthDay = []
+		for (let i = 1; i <= totleWeekDays.value; i++ ) {
+			monthDay.push(i)
+		}
+		monthDays.value = monthDay
+		console.log("当月总天数数组：" , monthDay)
+		
+
+	}
+
+	onMounted(()=>{
+		getData()
+	})
+	
+</script>
+
+
+<style lang="scss">
+	.app {
+		display: flex;
+		padding: 5rpx;
+	}
+
+	.top {
+		height: 100rpx;
+		background-color: antiquewhite;
+	}
+
+	.centen {
+		height: 800rpx;
+		background-color: azure;
+		.calendar {
+			background-color: aquamarine;
+			.week {
+				flex-direction: row;
+				justify-content: space-between;
+				width: 100%;
+				background-color: #91d1a2;
+				padding: 28rpx;
+				border-bottom: 1rpx solid #dadada;
+			}
+			.day {
+				width: 100%;
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				margin-left: -30rpx;
+				border-bottom: 1rpx solid #dadada;
+				padding-bottom: 50rpx;
+				.days {
+					width: 85rpx;
+					white-space: normal;
+					align-items: center;
+					justify-content: center;
+					display: inline-grid;
+					padding-left: 47rpx;
+					padding-top: 50rpx;
+					
+				}
+			}
+		}
+	}
+
+	.bottom {
+		
+	}
+</style>
