@@ -12,14 +12,14 @@
 					</view>
 				</view>
 				<view class="day">
-					<view class="days">
-						
+					<view class="days" style="color: gray;" v-for="(i,x) in beforeNumberAddNum" :key="x">
+						{{i}}
 					</view>
-						<view class="days" v-for="(item,index) in monthDays" :key="index">
-							{{item}}
-						</view>
+					<view class="days" v-for="(item,index) in monthDays" :key="index">
+						{{item}}
+					</view>
 					<view class="days">
-						
+
 					</view>
 				</view>
 			</view>
@@ -46,7 +46,11 @@
 	const monthDays = ref([])
 	// 当月前空数据
 	const monthBeforeNull = ref()
-	
+	// 上个月数据
+	const beforeMonth = ref()
+	// 上个月需要补到这个月天数
+	const beforeNumberAddNum = ref()
+
 	const weeks = ref([
 		{
 			id: 0,
@@ -76,41 +80,55 @@
 			week: "六",
 		},
 	])
-	
+
 	function getData() {
 		// 一共多少天
 		totleWeekDays.value = new Date(year.value, month.value + 1, 0).getDate()
 		console.log("这个月一共：" + totleWeekDays.value)
-		
+
 		// 当月首天星期几
 		startMonthWeek.value = new Date(year.value, month.value, 1).getDay()
-		if(startMonthWeek.value === 0) {
+		if (startMonthWeek.value === 0) {
 			startMonthWeek.value += 1
 		}
 		console.log("这个月一号星期几：" + startMonthWeek.value)
-		
+
 		// 当月前空数据 通过查找周期数据返回前面有空数据
 		const id = startMonthWeek.value
 		const index = weeks.value.findIndex(item => item.id === id)
-		const count = index>0? index : 0;
+		const count = index > 0 ? index : 0;
 		monthBeforeNull.value = count
-		console.log("当月前空数据：" , count)
-		
+		console.log("当月前空数据：", count)
+
+
 		// 当月界面整体天数
 		const monthDay = []
-		for (let i = 1; i <= totleWeekDays.value; i++ ) {
+		for (let i = 1; i <= totleWeekDays.value; i++) {
 			monthDay.push(i)
 		}
 		monthDays.value = monthDay
-		console.log("当月总天数数组：" , monthDay)
-		
+		console.log("当月总天数数组：", monthDay)
+		const beforeMonthDayNum = new Date(year.value, month.value, 0).getDate()
+		console.log("上个月补充数据：", beforeMonthDayNum)
+		const beforeMonthDays = []
+		for (let i = 1; i <= beforeMonthDayNum; i++) {
+			beforeMonthDays.push(i)
+		}
+		console.log("上个月数据：", beforeMonthDays)
+		beforeMonth.value = beforeMonthDays
+		// 获取上个月末尾数据 并赋值
+		const anum = monthBeforeNull.value
+		const lastFour = beforeMonth.value.slice(- anum);
+		beforeNumberAddNum.value = lastFour
+		console.log("上个月补充数据：", lastFour)
+
+		// 获取下个月数据 最多35天
 
 	}
 
-	onMounted(()=>{
+	onMounted(() => {
 		getData()
 	})
-	
 </script>
 
 
@@ -128,8 +146,10 @@
 	.centen {
 		height: 800rpx;
 		background-color: azure;
+
 		.calendar {
 			background-color: aquamarine;
+
 			.week {
 				flex-direction: row;
 				justify-content: space-between;
@@ -138,6 +158,7 @@
 				padding: 28rpx;
 				border-bottom: 1rpx solid #dadada;
 			}
+
 			.day {
 				width: 100%;
 				flex-direction: row;
@@ -146,6 +167,7 @@
 				margin-left: -30rpx;
 				border-bottom: 1rpx solid #dadada;
 				padding-bottom: 50rpx;
+
 				.days {
 					width: 85rpx;
 					white-space: normal;
@@ -154,13 +176,11 @@
 					display: inline-grid;
 					padding-left: 47rpx;
 					padding-top: 50rpx;
-					
+
 				}
 			}
 		}
 	}
 
-	.bottom {
-		
-	}
+	.bottom {}
 </style>
