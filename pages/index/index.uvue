@@ -18,15 +18,90 @@
 				</view>
 				<view class="day">
 					<!-- @click="clickNow(year, month, i)" -->
-					<view class="days" style="color: gray;" v-for="(i,x) in beforeNumberAddNum" :key="x" >
-						{{i}}
+					<view class="days-before" v-for="(item,index) in beforeNumberAddNum" :key="index">
+						<view class="d">{{item}}</view>
+						<view class="info">
+							<view class="date">8h</view>
+							<view class="txt"></view>
+							<view class="date">9h</view>
+							<view class="txt"></view>
+							<view class="date">10h</view>
+							<view class="txt"></view>
+							<view class="date">11h</view>
+							<view class="txt"></view>
+							<view class="date">2h</view>
+							<view class="txt"></view>
+							<view class="date">3h</view>
+							<view class="txt"></view>
+							<view class="date">4h</view>
+							<view class="txt"></view>
+							<view class="date">5h</view>
+							<view class="txt"></view>
+						</view>
 					</view>
-					<view class="days" v-for="(item,index) in monthDays" :key="index" @click="clickNow(year, month + 1, item)">
-						{{item}}
+					<view class="days" v-for="(item,index) in monthDays" :key="index"
+						@click="clickNow(year, month + 1, item)">
+						<view class="d">{{item}}</view>
+						<view class="info">
+							<view class="date">8am</view>
+							<view class="txt">8点吃个黄焖鸡</view>
+						</view>
+						<view class="info">
+							<view class="date">9am</view>
+							<view class="txt">9点刷会手机，发呆</view>
+						</view>
+						<view class="info">
+							<view class="date">10am</view>
+							<view class="txt">10点心情好，不饿不吃饭。</view>
+						</view>
+						<view class="info">
+							<view class="date">11am</view>
+							<view class="txt">11点我心情超好，打算吃牛奶燕麦。</view>
+						</view>
+						<view class="info">
+							<view class="date">2pm</view>
+							<view class="txt">下午两点我心情不错，打算吃个福建人。</view>
+						</view>
+						<view class="info">
+							<view class="date">3pm</view>
+							<view class="txt"> </view>
+						</view>
+						<view class="info">
+							<view class="date">4pm</view>
+							<view class="txt">4点早下班，出去遛弯，顺便吃会灰。</view>
+
+						</view>
+						<view class="info">
+							<view class="date">5pm</view>
+							<view class="txt">正常下班那不是简简单单~。</view>
+						</view>
+						<view class="info">
+							<view class="date">6pm</view>
+							<view class="txt">都六点了，我还在苦哈哈奋斗，承受了我这个年纪不该承受的痛。</view>
+						</view>
+
 					</view>
 					<!-- @click="clickNow(year, month + 1, ite)" -->
-					<view class="days" style="color: gray;" v-for="(ite,idx) in afterMonthDays" :key="idx" >
-						{{ite}}
+					<view class="days-after" style="color: gray;" v-for="(item,index) in afterMonthDays" :key="index">
+						<view class="d">{{item}}</view>
+						<view class="info">
+							<view class="date">8h:</view>
+							<view class="txt"></view>
+							<view class="date">9h:</view>
+							<view class="txt"></view>
+							<view class="date">10h:</view>
+							<view class="txt"></view>
+							<view class="date">11h:</view>
+							<view class="txt"></view>
+							<view class="date">2h:</view>
+							<view class="txt"></view>
+							<view class="date">3h:</view>
+							<view class="txt"></view>
+							<view class="date">4h:</view>
+							<view class="txt"></view>
+							<view class="date">5h:</view>
+							<view class="txt"></view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -133,12 +208,12 @@
 
 		monthDays.value = monthDay
 		console.log("当月总天数数组：", monthDay)
-		
+
 		// 获取下个月数据 最多35天
 		const sliceArr = monthDay.slice(0, 35 - anum)
 		const sliceLen = sliceArr.length
 		let afterArr = []
-		if(sliceLen < 35) {
+		if (sliceLen < 35) {
 			let num = 35 - sliceLen - anum
 			console.log("下个月需要补齐长度：", num)
 			for (let i = 1; i <= num; i++) {
@@ -147,9 +222,9 @@
 		}
 		afterMonthDays.value = afterArr
 	}
-	
+
 	function topMonth() {
-		if(month.value <= 0) {
+		if (month.value <= 0) {
 			month.value = 11
 			year.value = year.value - 1
 		} else {
@@ -157,9 +232,9 @@
 		}
 		getData()
 	}
-	
+
 	function bottomMonth() {
-		if(month.value >= 11) {
+		if (month.value >= 11) {
 			month.value = 0
 			year.value = year.value + 1
 		} else {
@@ -167,7 +242,7 @@
 		}
 		getData()
 	}
-	
+
 	// 点击当月 后续拓展功能
 	function clickNow(iyear, imonth, iday) {
 		let item = 0
@@ -177,7 +252,7 @@
 		const now = Y + M + D
 		console.log(111, now)
 	}
-	
+
 	function clickNowDay() {
 		const nowDate = new Date()
 		year.value = nowDate.getFullYear()
@@ -199,27 +274,31 @@
 	}
 
 	.top {
-		height: 100rpx;
+		height: 50rpx;
 		background-color: antiquewhite;
 	}
 
 	.centen {
-		height: 800rpx;
-		background-color: azure;
 
 		.calendar {
-			background-color: aquamarine;
 
 			.week {
-				flex-direction: row;
-				justify-content: space-between;
 				width: 100%;
-				background-color: #91d1a2;
-				padding-left: 50rpx;
-				padding-right: 60rpx;
-				padding-top: 30rpx;
-				padding-bottom: 30rpx;
-				border-bottom: 1rpx solid #dadada;
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				border-bottom: 1rpx solid #e8e8e8;
+				padding-bottom: 18rpx;
+				padding-top: 18rpx;
+				background-color: #f8f8f8;
+
+				.weeks {
+					width: 14%;
+					color: #4b4b4b;
+					align-items: center;
+					justify-content: center;
+					display: inline-grid;
+				}
 			}
 
 			.day {
@@ -228,17 +307,136 @@
 				flex-wrap: wrap;
 				align-items: flex-start;
 				border-bottom: 1rpx solid #dadada;
-				padding-bottom: 50rpx;
 
-				.days {
-					width: 100rpx;
+				.days-before {
+					display: flex;
+					width: 14%;
+					font-size: 18rpx;
 					white-space: normal;
 					align-items: center;
 					justify-content: center;
 					display: inline-grid;
-					padding-left: 30rpx;
-					padding-top: 50rpx;
 
+					// 日期
+					.d {
+						color: gray;
+						font-size: 38rpx;
+						align-items: center;
+						justify-content: center;
+						margin: 28rpx;
+						padding-bottom: 28rpx;
+						border-bottom: 1rpx solid #a6a6a6;
+					}
+
+					// 信息
+					.info {
+						display: flex;
+						margin: 2rpx;
+
+						// 小时
+						.date {
+							font-size: 18rpx;
+							background-color: #dadada;
+							color: #878787;
+							align-items: center;
+							justify-content: center;
+						}
+
+						// 备注
+						.txt {
+							font-size: 18rpx;
+							color: #959570;
+							min-height: 100rpx;
+						}
+					}
+				}
+
+				.days {
+					display: flex;
+					width: 14%;
+					font-size: 18rpx;
+					white-space: normal;
+					align-items: center;
+					justify-content: center;
+					display: inline-grid;
+
+					// 日期
+					.d {
+						font-size: 38rpx;
+						align-items: center;
+						justify-content: center;
+						margin: 28rpx;
+						padding-bottom: 28rpx;
+						border-bottom: 1rpx solid #a6a6a6;
+					}
+
+					// 信息
+					.info {
+						display: flex;
+						margin: 2rpx;
+
+						// 小时
+						.date {
+							font-size: 18rpx;
+							background-color: #dadada;
+							color: #878787;
+							align-items: center;
+							justify-content: center;
+						}
+
+						// 备注
+						.txt {
+							font-size: 18rpx;
+							color: #959570;
+							min-height: 100rpx;
+							background-color: #f5f5f5;
+							border-radius: 10rpx;
+							// transform: scale(0.9)
+						}
+					}
+				}
+
+				.days-after {
+					display: flex;
+					width: 14%;
+					font-size: 18rpx;
+					white-space: normal;
+					align-items: center;
+					justify-content: center;
+					display: inline-grid;
+
+					// 日期
+					.d {
+						color: gray;
+						font-size: 38rpx;
+						align-items: center;
+						justify-content: center;
+						margin: 28rpx;
+						padding-bottom: 28rpx;
+						border-bottom: 1rpx solid #a6a6a6;
+					}
+
+					// 信息
+					.info {
+						display: flex;
+						margin: 2rpx;
+
+						// 小时
+						.date {
+							font-size: 18rpx;
+							background-color: #dadada;
+							color: #878787;
+							align-items: center;
+							justify-content: center;
+						}
+
+						// 备注
+						.txt {
+							font-size: 18rpx;
+							color: #959570;
+							min-height: 100rpx;
+						}
+					}
 				}
 			}
 		}
