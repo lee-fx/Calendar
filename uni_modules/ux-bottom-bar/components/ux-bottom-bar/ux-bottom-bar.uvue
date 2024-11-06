@@ -1,0 +1,153 @@
+<template>
+	<view class="ux-bottom-bar">
+		<view class="ux-bottom-bar_item" :style="{width: (100 / tabs!.length) + '%', backgroundColor: bgColor}"
+			v-for="(item, index) in tabs" :key="index" @tap="onTabActive(index)">
+			<template v-if="!item.middle">
+				<!-- 图片 -->
+				<image class="icon" :style="{
+					width: iconSize + 'px',
+					height: iconSize + 'px'
+				}" :src="idx == index ? item.selectedImagePath : item.imagePath" v-if="item.imagePath != null"></image>
+
+				<!-- 图标 -->
+				<ux-icons :name="idx == index ? item.selectIcon : item.icon" :size="fontSize"
+					:color="idx == index ? selectedColor : color" v-if="item.icon != null"></ux-icons>
+
+				<!-- 文本 -->
+				<text v-if="item.text != null" class="text"
+					:style="{color: idx == index ? selectedColor : color, fontSize}">{{item.text}}</text>
+			</template>
+			<template v-else>
+				<!-- 图片 -->
+				<image class="middle-icon" :style="{
+					width: iconSize + 'px',
+					height: iconSize + 'px',
+					marginLeft: '-' + (iconSize / 2) + 'px',
+					transform: 'scale(' + scale + ',' + scale + ')',
+					bottom: (scale >= 1.8 ? (42 - iconSize) : ((42 - iconSize) / 2))  + 'px'
+				}" :src="idx == index ? item.selectedImagePath : item.imagePath" v-if="item.imagePath != null"></image>
+
+				<!-- 图标 -->
+				<ux-icons class="middle-icon" :style="{
+					marginLeft: '-' + (fontSize / 2) + 'px',
+					transform: 'scale(' + scale + ',' + scale + ')',
+					bottom: (scale >= 1.8 ? (42 - fontSize) : ((42 - fontSize) / 2))  + 'px'
+				}" :name="idx == index ? item.selectIcon : item.icon" :size="fontSize"
+					:color="idx == index ? selectedColor : color" v-if="item.icon != null"></ux-icons>
+			</template>
+		</view>
+	</view>
+</template>
+<script>
+	import type { PropType } from "vue"
+	import { UxBottomItem } from './types/index.uts'
+
+	export default {
+		data() {
+			return {
+				idx: 0
+			}
+		},
+
+		props: {
+			// 默认颜色
+			color: {
+				type: String,
+				default: '#333'
+			},
+
+			// 选中颜色
+			selectedColor: {
+				type: String,
+				default: '#007aff'
+			},
+
+			// 背景颜色
+			bgColor: {
+				type: String,
+				default: '#fff'
+			},
+
+			// 图标大小
+			iconSize: {
+				type: Number,
+				default: 14
+			},
+
+			// 文本大小
+			fontSize: {
+				type: Number,
+				default: 14
+			},
+
+			// 凸起按钮大小
+			scale: {
+				type: Number,
+				default: 1
+			},
+
+			// 默认选中选项
+			curr: {
+				type: Number,
+				default: 0
+			},
+
+			// tab数据
+			tabs: {
+				type: Array as PropType<UxBottomItem[]>,
+				default() : UxBottomItem[] {
+					return [] as UxBottomItem[]
+				}
+			}
+		},
+
+		created() {
+			this.idx = this.curr
+			console.log(this.tabs)
+		},
+
+		methods: {
+			onTabActive(index : number) {
+				this.idx = index
+				this.$emit('on-tab-active', index)
+			}
+		}
+	}
+</script>
+<style lang="scss">
+	.ux-bottom-bar {
+		background-color: #fff;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		position: fixed;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		z-index: 99;
+
+		&_item {
+			height: 42px;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			flex-grow: 1;
+			padding-bottom: 4px;
+			padding-top: 4px;
+
+			.middle-icon {
+				position: fixed;
+				left: 50%;
+				z-index: 999;
+			}
+
+			.text {
+				font-size: 14px;
+			}
+		}
+
+
+	}
+</style>

@@ -1,13 +1,26 @@
 <template>
-	<view class="app">
+	<view class="app" >
 		<view class="top">
-			{{ year }} 年 {{ month + 1}} 月
+			<!-- 头像 -->
+			<view class="left">
+				<view class="icon">
+					<image class="img" src="../../static/image/icon.png" mode="scaleToFill"></image>
+				</view>
+				<view class="date">
+					{{ year }}年{{ month + 1}}月
+				</view>
+			</view>
+			<view class="right">
+				<view class="search">
+					<image class="img" src="../../static/image/find.png" mode="scaleToFill"></image>
+				</view>
+			</view>
 		</view>
-		<view class="button">
+<!-- 		<view class="button">
 			<view @click="topMonth()">上个月</view>
 			<view @click="bottomMonth()">下个月</view>
 			<view @click="clickNowDay()">今日</view>
-		</view>
+		</view> -->
 		<view class="centen">
 			<!-- 日程表 -->
 			<view class="calendar">
@@ -18,7 +31,8 @@
 				</view>
 				<view class="day">
 					<!-- @click="clickNow(year, month, i)" -->
-					<view class="days-before" v-for="(item,index) in beforeNumberAddNum" :key="index">
+					<!-- 						@click="clickNow(year, month + 1, item)" -->
+					<view class="days-before" v-for="(item,index) in beforeNumberAddNum" :key="index" @click="topMonth()">
 						<view class="d">{{item}}</view>
 						<view class="info">
 							<view class="date">8h</view>
@@ -40,7 +54,7 @@
 						</view>
 					</view>
 					<view class="days" v-for="(item,index) in monthDays" :key="index"
-						@click="clickNow(year, month + 1, item)">
+						@click="clickNowDay()">
 						<view class="d">{{item}}</view>
 						<view class="info">
 							<view class="date">8am</view>
@@ -82,7 +96,7 @@
 
 					</view>
 					<!-- @click="clickNow(year, month + 1, ite)" -->
-					<view class="days-after" style="color: gray;" v-for="(item,index) in afterMonthDays" :key="index">
+					<view class="days-after" style="color: gray;" v-for="(item,index) in afterMonthDays" :key="index" @click="bottomMonth()">
 						<view class="d">{{item}}</view>
 						<view class="info">
 							<view class="date">8h:</view>
@@ -106,9 +120,11 @@
 				</view>
 			</view>
 		</view>
+
 		<view class="bottom">
 		</view>
 	</view>
+
 </template>
 
 <script setup>
@@ -269,17 +285,81 @@
 
 <style lang="scss">
 	.app {
+		width: 100%;
+		height: 100%;
 		display: flex;
 		padding: 5rpx;
 	}
+	
+	// <view class="top">
+	// 	<!-- 头像 -->
+	// 	<view class="icon">
+	// 		头像
+	// 	</view>
+	// 	<view class="date">
+	// 		{{ year }} 年 {{ month + 1}} 月
+	// 	</view>
+	// 	<view class="search">?</view>
+	// </view>
 
 	.top {
-		height: 50rpx;
-		background-color: antiquewhite;
+		display: flex;
+		height: 4rem;
+		width: 100%;
+		justify-content: space-between;
+		flex-direction: row;
+		background-color: #fcfcfc;
+		.left {
+			width: 50%;
+			height: 4rem;
+			flex-direction: row;
+			justify-content: left;
+			align-items: center;
+			padding: 10rpx;
+			.icon {
+				width: 28%;
+				height: 60%;
+				padding: 8rpx;
+				padding-bottom: 20%; /* 创建一个正方形 */
+				border: 8rpx solid #99e5e5;
+				border-radius: 50%;
+				background-color: transparent;
+				margin-right: 10rpx;
+				.img {
+					display: flex;
+					justify-content: center;
+					align-items: center;
+					width: 68rpx;
+					height: 68rpx;
+				}
+			}
+			.date {
+				font-size: 28rpx;
+				font-weight: 1000;
+			}
+		}
+		.right {
+			width: 50%;
+			height: 4rem;
+			.search {
+				width: 100%;
+				height: 100%;
+				display: flex;
+				flex-direction: row;
+				justify-content: center;
+				align-items: center;
+				.img {
+					width: 68rpx;
+					height: 68rpx;
+				}
+			}
+		}
+
 	}
 
 	.centen {
-
+		height: 34rem;
+		width: 100%;
 		.calendar {
 
 			.week {
@@ -307,6 +387,11 @@
 				flex-wrap: wrap;
 				align-items: flex-start;
 				border-bottom: 1rpx solid #dadada;
+
+				overflow-x: hidden; 
+				overflow-y: scroll; 
+				-webkit-overflow-scrolling: touch; 
+				height: 100vh;
 
 				.days-before {
 					display: flex;
@@ -442,5 +527,8 @@
 		}
 	}
 
-	.bottom {}
+	.bottom {
+		width: 1000rpx;
+		height: 100rpx;
+	}
 </style>
